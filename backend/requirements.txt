@@ -1,16 +1,19 @@
 fastapi
-uvicorn
+uvicorn[standard]
 pydantic
 pydantic-settings
 python-dotenv
 pandas
 numpy
 scikit-learn
+importlib-metadata
 
+# LangChain & AI
 langchain
+langchain-core
 langchain-community
 langchain-openai
 langchain-pinecone
+langchain-huggingface
 sentence-transformers
-faiss-cpu
 pinecone
