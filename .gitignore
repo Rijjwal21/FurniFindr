@@ -1,0 +1,20 @@
+# Ignore all .env files
+*.env
+
+# Ignore Python virtual environment
+backend/venv/
+
+# Ignore Python cache
+backend/app/__pycache__/
+
+# Ignore Node.js packages
+frontend/node_modules/
+
+# Ignore generated artifacts (like the FAISS index)
+notebooks/artifacts/
+
+# Ignore Jupyter Notebook checkpoints
+notebooks/.ipynb_checkpoints/
+
+# Ignore OS-specific files
+.DS_Store
