@@ -1,14 +1,50 @@
 import pandas as pd
 import ast
 import re
+import sys
+import os
+from dotenv import load_dotenv
 from typing import List, Dict, Any
+
+# --- START: Environment Variable Fix ---
+# We will manually find and load the .env file from the 'backend' directory
+script_dir = os.path.dirname(os.path.abspath(__file__)) # This is /backend/app/data_ingestion
+backend_dir = os.path.dirname(os.path.dirname(script_dir)) # This is /backend
+dotenv_path = os.path.join(backend_dir, '.env')
+
+if os.path.exists(dotenv_path):
+    print(f"Found .env file. Loading environment variables from: {dotenv_path}")
+    load_dotenv(dotenv_path=dotenv_path)
+else:
+    print(f"CRITICAL: .env file not found at {dotenv_path}. The script will fail.")
+    sys.exit(1)
+
+# Now, check that the keys were loaded correctly into the environment
+if "PINECONE_API_KEY" not in os.environ:
+    print("CRITICAL: PINECONE_API_KEY not found in environment. Check your .env file.")
+    sys.exit(1)
+if "PINECONE_ENVIRONMENT" not in os.environ:
+    print("CRITICAL: PINECONE_ENVIRONMENT not found in environment. Check your .env file.")
+    sys.exit(1)
+if "OPENAI_API_KEY" not in os.environ:
+    print("CRITICAL: OPENAI_API_KEY not found in environment. Check your .env file.")
+    sys.exit(1)
+    
+print("All API keys loaded successfully.")
+# --- END: Environment Variable Fix ---
+
+
+# Add the project root to the path to allow imports from app
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from langchain_community.docstore.document import Document
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_pinecone import Pinecone
-from pinecone import Pinecone as PineconeClient, ServerlessSpec
+from pinecone import Pinecone as PineconeClient, ServerlessSpec, PodSpec
 from app.core.config import settings
 
+# This is the new, correct import to fix the warning
+from langchain_huggingface import HuggingFaceEmbeddings
 def clean_price(price_str: str) -> float:
     """Removes '$' and ',' from price string and converts to float."""
     if not isinstance(price_str, str):
@@ -53,7 +89,14 @@ def create_documents(df: pd.DataFrame) -> List[Document]:
 def main():
     """Main ingestion function."""
     print(f"Loading data from {settings.DATA_FILE_PATH}...")
-    df = pd.read_csv(settings.DATA_FILE_PATH)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_file_path = os.path.join(script_dir, "sample_data.csv")
+
+    if not os.path.exists(data_file_path):
+        print(f"Error: Data file not found at {data_file_path}")
+        return
+
+    df = pd.read_csv(data_file_path)
     
     # --- Data Cleaning ---
     df = df.fillna("")
@@ -89,7 +132,7 @@ def main():
             raise ValueError("PINECONE_API_KEY and PINECONE_ENVIRONMENT must be set in .env")
         
         print("Initializing Pinecone client...")
-        pc = PineconeClient(api_key=settings.PINECONE_API_KEY)
+        pc = PineconeClient(api_key=os.environ["PINECONE_API_KEY"])
         
         # Create index if it doesn't exist
         if settings.PINECONE_INDEX_NAME not in pc.list_indexes().names():

@@ -1,7 +1,7 @@
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_pinecone import Pinecone
-from langchain.schema.vectorstore import VectorStoreRetriever
+from langchain_core.vectorstores import VectorStoreRetriever
 from app.core.config import settings
 import os
 

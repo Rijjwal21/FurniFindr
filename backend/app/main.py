@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import pandas as pd
 import warnings
+import re
 
 from app.models.schemas import (
     RecommendationRequest, 
@@ -127,7 +128,7 @@ async def get_analytics_data():
     )
 
 @app.get("/products", 
-         response_model=List[Product], 
+         response_model=list[Product], 
          tags=["Products"])
 async def get_all_products():
     """

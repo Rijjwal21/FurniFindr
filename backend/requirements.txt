@@ -13,4 +13,4 @@ langchain-openai
 langchain-pinecone
 sentence-transformers
 faiss-cpu
-pinecone-client
+pinecone
