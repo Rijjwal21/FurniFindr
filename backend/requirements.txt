@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+python-dotenv
+pandas
+numpy
+scikit-learn
+
+langchain
+langchain-community
+langchain-openai
+langchain-pinecone
+sentence-transformers
+faiss-cpu
+pinecone-client
