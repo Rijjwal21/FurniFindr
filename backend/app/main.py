@@ -26,11 +26,11 @@ async def lifespan(app: FastAPI):
     warnings.simplefilter(action='ignore', category=UserWarning)
     
     # Load the vector store into memory
-    try:
-        vector_store.get_vector_store()
-        print("Vector store initialized.")
-    except Exception as e:
-        print(f"CRITICAL: Failed to initialize vector store: {e}")
+    #try:
+        #vector_store.get_vector_store()
+        #print("Vector store initialized.")
+    #except Exception as e:
+        #print(f"CRITICAL: Failed to initialize vector store: {e}")
         # In a real app, you might want to prevent startup
     
     yield
